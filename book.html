@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | NailedByGuruX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL & HEADER (Identical to previous) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #000; overflow-x: hidden; }
+        
+        header {
+            position: fixed; top: 0; width: 100%; background-color: #dad9d9;
+            z-index: 1000;
+            border-bottom: 1px solid #f0f0f0; padding: 20px 0; text-align: center;
+        }
+        .logo-container h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; letter-spacing: 5px; text-transform: uppercase; }
+        .logo-container p { font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: #666; margin-bottom: 15px; }
+        nav ul { list-style: none; display: flex; justify-content: center; gap: 30px; }
+        nav a { text-decoration: none; color: #000; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* --- BOOKING SECTION --- */
+        .booking-container { margin-top: 180px; padding: 40px 5%; text-align: center; }
+        .service-list { max-width: 600px; margin: 0 auto; list-style: none; }
+        .service-item { border-bottom: 1px solid #eee; padding: 20px 0; transition: 0.3s ease; cursor: pointer; }
+        .service-item:hover { transform: scale(1.05); }
+        .service-main { display: flex; justify-content: space-between; align-items: center; }
+        .sub-options { display: none; padding: 15px; background: #fafafa; margin-top: 10px; text-align: left; }
+        .sub-options.active { display: block; }
+        .length-options { display: none; padding-left: 20px; border-left: 1px solid #000; margin-top: 10px; }
+        .length-options.active { display: block; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+        .btn-small { background: none; border: none; cursor: pointer; font-size: 1.1rem; }
+
+        /* --- CART SIDEBAR --- */
+        #cart-popup {
+            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
+            background: #fff; z-index: 2000; transition: 0.4s; padding: 60px 25px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+        }
+        #cart-popup.open { right: 0; }
+        .close-x { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 1.5rem; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f9f9f9; }
+
+        /* --- CALENDAR MODAL --- */
+        #calendar-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 3000; padding: 120px 5% 40px; overflow-y: auto;
+        }
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto 30px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; max-width: 500px; margin: 0 auto; }
+        .day-name { font-weight: bold; font-size: 0.7rem; padding: 10px 0; color: #888; }
+        .day { padding: 15px 5px; border: 1px solid #f0f0f0; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+        .day:hover:not(.empty) { background: #000; color: #fff; }
+        .day.selected { background: #000; color: #fff; }
+        .empty { border: none; cursor: default; }
+
+        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 500px; margin: 30px auto; }
+        .time-btn { padding: 12px; border: 1px solid #000; background: none; cursor: pointer; font-family: 'Montserrat'; transition: 0.3s; }
+        .time-btn.selected { background: #000; color: #fff; }
+
+        /* --- FINAL POPUP --- */
+        #final-confirm {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 500px; background: #fff; padding: 40px; z-index: 4000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.2); text-align: center; border: 1px solid #eee;
+        }
+        .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 3500; }
+
+        .confirm-btn { background: #000; color: #fff; border: none; padding: 15px 40px; letter-spacing: 2px; cursor: pointer; width: 100%; margin-top: 20px; }
+    
+    /* --- FOOTER STYLES --- */
+footer {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 60px 10% 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap; /* Keeps it mobile friendly */
+    gap: 40px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-logo {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.footer-section h3 {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: #888; /* Slightly dimmed for hierarchy */
+}
+
+.footer-section p {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    font-weight: 300;
+}
+
+/* Social Media Icons & Shimmer Effect */
+.social-icons {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.icon-link {
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.4s ease;
+}
+
+.icon-link:hover {
+    color: #fff;
+    /* Shimmer Effect */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                 0 0 20px rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+/* Bottom Credit */
+.footer-bottom {
+    margin-top: 50px;
+    text-align: center;
+    border-top: 1px solid #222;
+    padding-top: 30px;
+}
+
+.footer-bottom p {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #555;
+}
+
+.footer-bottom a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 400;
+    transition: 0.3s;
+}
+
+.footer-bottom a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .social-icons {
+        justify-content: center;
+    }
+    .footer-right, .footer-left, .footer-center {
+        width: 100%;
+    }
+}
+    </style>
+</head>
+<body>
+
+     <header>
+        <div class="logo-container">
+            <h1>NBGX</h1>
+            <p>Nail Technician</p>
+        </div>
+        <nav>
+            <ul>
+               <li><a href="index.html">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="gallery.html">GALLERY</a></li>
+                <li><a href="book.html">BOOK</a></li>
+            </ul>
+        </nav>
+    </header>        
+
+    <main class="booking-container">
+        <ul class="service-list">
+            <li class="service-item" onclick="toggleSection('soak-sub')">
+                <div class="service-main"><span>Soak Offs</span><span>▼</span></div>
+                <div id="soak-sub" class="sub-options" onclick="event.stopPropagation()">
+                    <div class="row"><span>Standard Service - R150</span><button class="btn-small" onclick="toggleSection('soak-len')">▶</button></div>
+                    <div id="soak-len" class="length-options">
+                        <div class="row"><span>Short Length</span><button class="btn-small" onclick="addToCart('Soak Off (Short)', 150)">+</button></div>
+                    </div>
+                </div>
+            </li>
+            <li class="service-item"><span>Masterclass Information</span><span>▼</span></li>
+            <li class="service-item"><span>Tips (plain) polygel</span><span>▼</span></li>
+            <li class="service-item"><span>Pedicure Gel</span><span>▼</span></li>
+        </ul>
+    </main>
+
+    <div id="cart-popup">
+        <span class="close-x" onclick="toggleCart()">×</span>
+        <h3 style="font-family:'Playfair Display'; margin-bottom:30px;">Your Nail Appointment Cart</h3>
+        <div id="cart-items"></div>
+        <div style="margin-top:30px; border-top:1px solid #000; padding-top:15px; font-weight:600;">Total: R<span id="cart-total">0</span></div>
+        <button class="confirm-btn" onclick="openCalendar()">PROCEED</button>
+    </div>
+
+    <div id="calendar-modal">
+        <div class="cal-nav">
+            <button class="btn-small" onclick="moveMonth(-1)">◀</button>
+            <h2 id="month-display" style="font-family:'Playfair Display'">January 2026</h2>
+            <button class="btn-small" onclick="moveMonth(1)">▶</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+        <div class="time-grid">
+            <button class="time-btn" onclick="selectTime(this)">7AM</button><button class="time-btn" onclick="selectTime(this)">9AM</button>
+            <button class="time-btn" onclick="selectTime(this)">11AM</button><button class="time-btn" onclick="selectTime(this)">2PM</button>
+            <button class="time-btn" onclick="selectTime(this)">4PM</button><button class="time-btn" onclick="selectTime(this)">6PM</button>
+        </div>
+        <div style="text-align:center;"><button class="confirm-btn" style="max-width:300px;" onclick="finalizeBooking()">CONFIRM BOOKING</button></div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div id="final-confirm">
+        <p id="final-msg" style="margin-bottom:20px;"></p>
+        <button class="confirm-btn" onclick="sendToWhatsApp()">Okay</button>
+    </div>
+
+    <script>
+        let cart = [];
+        let selectedDate = null;
+        let selectedTime = null;
+        let currentMonth = 0; // 0 = Jan 2026
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        function toggleSection(id) { document.getElementById(id).classList.toggle('active'); }
+        function toggleCart() { document.getElementById('cart-popup').classList.toggle('open'); }
+        
+        function addToCart(name, price) {
+            cart.push({name, price, id: Math.floor(Math.random()*10000)});
+            updateCart();
+            toggleCart();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCart();
+        }
+
+        function updateCart() {
+            const container = document.getElementById('cart-items');
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                total += item.price;
+                return `<div class="cart-item"><span>${item.name}</span><span>R${item.price} <span onclick="removeFromCart(${item.id})" style="color:red; cursor:pointer; margin-left:10px;">🗑️</span></span></div>`;
+            }).join('');
+            document.getElementById('cart-total').innerText = total;
+        }
+
+        function openCalendar() { document.getElementById('calendar-modal').style.display = 'block'; renderCalendar(); }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const display = document.getElementById('month-display');
+            grid.innerHTML = ['S','M','T','W','T','F','S'].map(d => `<div class="day-name">${d}</div>`).join('');
+            
+            const firstDay = new Date(2026, currentMonth, 1).getDay();
+            const daysInMonth = new Date(2026, currentMonth + 1, 0).getDate();
+            
+            display.innerText = `${months[currentMonth]} 2026`;
+            for(let i=0; i<firstDay; i++) grid.innerHTML += `<div class="day empty"></div>`;
+            for(let i=1; i<=daysInMonth; i++) {
+                grid.innerHTML += `<div class="day" onclick="selectDate(this, ${i})">${i}</div>`;
+            }
+        }
+
+        function moveMonth(dir) {
+            currentMonth = Math.min(11, Math.max(0, currentMonth + dir));
+            renderCalendar();
+        }
+
+        function selectDate(el, day) {
+            document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedDate = `${day} ${months[currentMonth]} 2026`;
+        }
+
+        function selectTime(el) {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTime = el.innerText;
+        }
+
+        function finalizeBooking() {
+            if(!selectedDate || !selectedTime || cart.length === 0) return alert("Please select services, date, and time.");
+            const uniqueNum = "NBGX-" + Math.floor(Math.random()*900000 + 100000);
+            const total = document.getElementById('cart-total').innerText;
+            const msg = `Hello there, I have currently set a nail appointment for ${selectedDate} at ${selectedTime} at NailedByGuruX and your total is R${total}. Your booking number is ${uniqueNum}. Please use it as reference when paying for booking fee. Ensure to pay R200 to secure your date.`;
+            
+            document.getElementById('final-msg').innerText = msg;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('final-confirm').style.display = 'block';
+            
+            // Store for WhatsApp
+            window.bookingData = { msg, uniqueNum, total };
+        }
+
+        function sendToWhatsApp() {
+            const items = cart.map(i => i.name).join(', ');
+            const fullText = `BOOKING REQUEST:\n${window.bookingData.msg}\nServices: ${items}`;
+            window.open(`https://wa.me/27813198929?text=${encodeURIComponent(fullText)}`, '_blank');
+        }
+    </script>
+
+     <footer>
+    <div class="footer-container">
+        <div class="footer-section footer-left">
+            <h2 class="footer-logo">NailedByGuruX</h2>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/yourprofile" target="_blank" class="icon-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/yourprofile" target="_blank" class="icon-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.tiktok.com/@yourprofile" target="_blank" class="icon-link"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section footer-center">
+            <h3>TRADING HOURS</h3>
+            <p>Mon - Fri: 09:00 - 18:00</p>
+            <p>Sat: 09:00 - 15:00</p>
+            <p>Sun: Closed</p>
+        </div>
+
+        <div class="footer-section footer-right">
+            <h3>VISIT US</h3>
+            <p>123 Luxury Lane</p>
+            <p>Sandton, Johannesburg</p>
+            <p>2196</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>Website designed by <a href="https://www.tiktok.com/@mbali_mahlangu" target="_blank">Mbali Mahlangu</a> 2026</p>
+    </div>
+</footer>
+
+</body>
+</html>
