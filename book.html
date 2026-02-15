@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment | NailedByGuruX</title>
+    <title>Book Appointment | NailedByMbalz</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -179,7 +179,7 @@ footer {
 
      <header>
         <div class="logo-container">
-            <h1>NBGX</h1>
+            <h1>NBM</h1>
             <p>Nail Technician</p>
         </div>
         <nav>
@@ -197,9 +197,9 @@ footer {
             <li class="service-item" onclick="toggleSection('soak-sub')">
                 <div class="service-main"><span>Soak Offs</span><span>▼</span></div>
                 <div id="soak-sub" class="sub-options" onclick="event.stopPropagation()">
-                    <div class="row"><span>Standard Service - R150</span><button class="btn-small" onclick="toggleSection('soak-len')">▶</button></div>
+                    <div class="row"><span>Acrylic Soak Off - R100</span><button class="btn-small" onclick="toggleSection('soak-len')">▶</button></div>
                     <div id="soak-len" class="length-options">
-                        <div class="row"><span>Short Length</span><button class="btn-small" onclick="addToCart('Soak Off (Short)', 150)">+</button></div>
+                        <div class="row"><span>Short Length</span><button class="btn-small" onclick="addToCart('Soak Off (Short)', 100)">+</button></div>
                     </div>
                 </div>
             </li>
@@ -307,7 +307,7 @@ footer {
             if(!selectedDate || !selectedTime || cart.length === 0) return alert("Please select services, date, and time.");
             const uniqueNum = "NBGX-" + Math.floor(Math.random()*900000 + 100000);
             const total = document.getElementById('cart-total').innerText;
-            const msg = `Hello there, I have currently set a nail appointment for ${selectedDate} at ${selectedTime} at NailedByGuruX and your total is R${total}. Your booking number is ${uniqueNum}. Please use it as reference when paying for booking fee. Ensure to pay R200 to secure your date.`;
+            const msg = `Hello there, I have currently set a nail appointment for ${selectedDate} at ${selectedTime} at NailedByMbalz and your total is R${total}. Your booking number is ${uniqueNum}. Please use it as reference when paying for booking fee. Ensure to pay R200 to secure your date.`;
             
             document.getElementById('final-msg').innerText = msg;
             document.getElementById('overlay').style.display = 'block';
@@ -327,7 +327,7 @@ footer {
      <footer>
     <div class="footer-container">
         <div class="footer-section footer-left">
-            <h2 class="footer-logo">NailedByGuruX</h2>
+            <h2 class="footer-logo">NailedByMbalz</h2>
             <div class="social-icons">
                 <a href="https://www.instagram.com/yourprofile" target="_blank" class="icon-link"><i class="fab fa-instagram"></i></a>
                 <a href="https://www.facebook.com/yourprofile" target="_blank" class="icon-link"><i class="fab fa-facebook-f"></i></a>
@@ -344,16 +344,17 @@ footer {
 
         <div class="footer-section footer-right">
             <h3>VISIT US</h3>
-            <p>123 Luxury Lane</p>
-            <p>Sandton, Johannesburg</p>
-            <p>2196</p>
+            <p>123 Mbalz Avenue</p>
+            <p>Centurion, Johannesburg</p>
+            <p>12345</p>
         </div>
     </div>
 
     <div class="footer-bottom">
-        <p>Website designed by <a href="https://www.tiktok.com/@mbali_mahlangu" target="_blank">Mbali Mahlangu</a> 2026</p>
+        <p>Website designed by <a href="https://www.tiktok.com/@mbali_mahlangu" target="_blank">Mbali Mahlangu</a> </p>
     </div>
 </footer>
 
 </body>
+
 </html>
